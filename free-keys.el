@@ -7,6 +7,7 @@
 ;; Version: 0.1
 ;; Created: 3rd November 2013
 ;; Keywords: convenience
+;; Package-Requires: ((cl-lib "0.3"))
 
 ;; This file is not part of GNU Emacs.
 
@@ -29,6 +30,8 @@
 ;; located here: https://gist.github.com/bjorne/3796607
 
 ;;; Code:
+
+(require 'cl-lib)
 
 (defgroup free-keys ()
   "Free keys."
@@ -87,7 +90,9 @@
   (let ((buf (get-buffer-create "*Free keys*")))
     (pop-to-buffer buf)
     (with-current-buffer buf
-      (read-only-mode -1)
+      (if (fboundp 'read-only-mode)
+          (read-only-mode -1)
+        (setq buffer-read-only nil))
       (erase-buffer)
       (insert "Help: (b) change buffer (p) change prefix (q) quit\n"
               "--------------------------------------------------\n\n")
