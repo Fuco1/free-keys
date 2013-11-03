@@ -121,7 +121,6 @@
       (goto-char 0)
       (free-keys-mode))))
 
-;;;###autoload
 (define-derived-mode free-keys-mode special-mode "Free Keys"
   "Free keys mode.
 
