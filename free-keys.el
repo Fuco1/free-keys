@@ -97,8 +97,6 @@
           (read-only-mode -1)
         (setq buffer-read-only nil))
       (erase-buffer)
-      (insert "Help: (b) change buffer (p) change prefix (q) quit\n"
-              "--------------------------------------------------\n\n")
       (insert "Free keys"
               (if (not (equal prefix "")) (format " with prefix %s" prefix) "")
               " in buffer "
@@ -136,7 +134,8 @@
 Display the free keybindings in current buffer.
 
 \\{free-keys-mode-map}"
-  (set (make-local-variable 'revert-buffer-function) 'free-keys-revert-buffer))
+  (set (make-local-variable 'revert-buffer-function) 'free-keys-revert-buffer)
+  (set (make-local-variable 'header-line-format) "Help: (b) change buffer (p) change prefix (q) quit"))
 
 (provide 'free-keys)
 ;;; free-keys.el ends here
