@@ -8,6 +8,7 @@
 ;; Created: 3rd November 2013
 ;; Keywords: convenience
 ;; Package-Requires: ((cl-lib "0.3"))
+;; URL: https://github.com/Fuco1/free-keys
 
 ;; This file is not part of GNU Emacs.
 
@@ -28,6 +29,8 @@
 
 ;; Show free keybindings for modkeys or prefixes. Based on code
 ;; located here: https://gist.github.com/bjorne/3796607
+;;
+;; For complete description see https://github.com/Fuco1/free-keys
 
 ;;; Code:
 
@@ -58,6 +61,10 @@
   "Buffer from which `free-keys' was called.")
 
 (defun free-keys--print-in-columns (key-list &optional columns)
+  "Print the KEY-LIST into as many columns as will fit into COLUMNS characters.
+
+The columns are ordered according to variable `free-keys-keys',
+advancing down-right.  The margin between each column is 5 characters."
   (setq columns (or columns 80))
   (let* ((len (+ 5 (length (car key-list))))
          (cols (/ columns len))
@@ -73,19 +80,37 @@
         (cl-incf cur-row)))))
 
 (defun free-keys-set-prefix (prefix)
-  "Change the prefix and update the display."
+  "Change the prefix in current *Free keys* buffer to PREFIX and
+update the display."
   (interactive "sPrefix: ")
   (free-keys prefix free-keys-original-buffer))
 
 (defun free-keys-change-buffer (buffer)
+  "Change the buffer for which the bindings are displayed to
+BUFFER and update the display."
   (interactive "bShow free bindings for buffer: ")
   (free-keys nil (get-buffer-create buffer)))
 
 (defun free-keys-revert-buffer (_ _)
+  "Revert the *Free keys* buffer.
+
+This simply calls `free-keys'."
   (free-keys nil free-keys-original-buffer))
+
+;; TODO: split this function into something cleaner.
 
 ;;;###autoload
 (defun free-keys (&optional prefix buffer)
+  "Display free keys in current buffer.
+
+A free key is a key that has no associated key-binding as
+determined by function `key-binding'.
+
+By default, keys on `free-keys-keys' list with no prefix sequence
+are considered, possibly together with modifier keys from
+`free-keys-modifiers'.  You can change the prefix sequence by
+hitting 'p' in the *Free keys* buffer.  Prefix is supplied in
+format recognized by `kbd', for example \"C-x\"."
   (interactive (list (when current-prefix-arg
                        (read-from-minibuffer "Prefix: "))))
   (setq prefix (or prefix ""))
