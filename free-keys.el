@@ -87,7 +87,7 @@
 ;;;###autoload
 (defun free-keys (&optional prefix buffer)
   (interactive (list (when current-prefix-arg
-                         (read-from-minibuffer "Prefix: "))))
+                       (read-from-minibuffer "Prefix: "))))
   (setq prefix (or prefix ""))
   (setq free-keys-original-buffer (or buffer (current-buffer)))
   (let ((buf (get-buffer-create "*Free keys*")))
@@ -118,7 +118,8 @@
                                 (if prefix (concat prefix " " key-name) key-name))
                                (binding
                                 (with-current-buffer free-keys-original-buffer (key-binding (read-kbd-macro full-name)))))
-                          (when (not binding)
+                          (when (or (not binding)
+                                    (eq binding 'undefined))
                             (push full-name empty-keys))))
                       free-keys-keys)
                 (free-keys--print-in-columns (nreverse empty-keys)))
