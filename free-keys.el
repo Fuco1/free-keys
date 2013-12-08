@@ -81,6 +81,9 @@
   (interactive "bShow free bindings for buffer: ")
   (free-keys nil (get-buffer-create buffer)))
 
+(defun free-keys-revert-buffer (_ _)
+  (free-keys nil free-keys-original-buffer))
+
 ;;;###autoload
 (defun free-keys (&optional prefix buffer)
   (interactive (list (when current-prefix-arg
@@ -131,7 +134,8 @@
 
 Display the free keybindings in current buffer.
 
-\\{free-keys-mode-map}")
+\\{free-keys-mode-map}"
+  (set (make-local-variable 'revert-buffer-function) 'free-keys-revert-buffer))
 
 (provide 'free-keys)
 ;;; free-keys.el ends here
