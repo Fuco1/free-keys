@@ -1,4 +1,4 @@
-# free-keys
+# free-keys [![Paypal logo](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=TAWNECQR3TTUY)
 
 Show free bindings in current buffer. Based on https://gist.github.com/bjorne/3796607
 
