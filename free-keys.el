@@ -51,13 +51,35 @@
   :group 'free-keys)
 
 (defcustom free-keys-ignored-bindings nil
-  "List of bindings with modifiers which shouldn't be considered as free.
+  "List of bindings with modifiers which should never be considered free.
+
+The elements could be either strings of form \"MOD-KEY\" or cons
+where the car is a single letter modifier as in
+`free-keys-modifiers' and the cdr is a string containing keys to
+be ignored with this modifiers, like `free-keys-keys'.
 
 The bindings should not contain a prefix.  This can typically be
 used to ignore bindings intercepted by the window manager used
 for swapping windows and similar operations."
-  :type '(repeat string)
+  :type '(repeat (choice (string :tag "Key binding")
+                         (cons :tag "Modifier and string of key bindings"
+                               (string :tag "Modifier")
+                               (string :tag "Key bindings"))))
   :group 'free-keys)
+
+(defun free-keys-ignored-bindings ()
+  "Return a list of bindings that should never be considered free.
+
+The elements of the returned list are of form \"MOD-KEY\".
+
+See also the variable `free-keys-ignored-bindings'."
+  (apply 'append
+         (mapcar (lambda (x)
+                   (if (stringp x) (list x)
+                     (mapcar (lambda (y)
+                               (concat (car x) "-" (char-to-string y)))
+                             (cdr x))))
+                 free-keys-ignored-bindings)))
 
 (defvar free-keys-mode-map
   (let ((map (make-keymap)))
@@ -123,7 +145,7 @@ This simply calls `free-keys'."
                     (if (and prefix (not (equal prefix ""))) (concat prefix " " key-name) key-name))
                    (binding
                     (with-current-buffer free-keys-original-buffer (key-binding (read-kbd-macro full-name)))))
-              (when (and (not (member key-name free-keys-ignored-bindings))
+              (when (and (not (member key-name (free-keys-ignored-bindings)))
                          (or (not binding)
                              (eq binding 'undefined)))
                 (push full-name empty-keys))))
