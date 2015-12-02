@@ -127,7 +127,7 @@ BUFFER and update the display."
   (interactive "bShow free bindings for buffer: ")
   (free-keys nil (get-buffer-create buffer)))
 
-(defun free-keys-revert-buffer (_ _)
+(defun free-keys-revert-buffer (_ignore-auto _noconfirm)
   "Revert the *Free keys* buffer.
 
 This simply calls `free-keys'."
