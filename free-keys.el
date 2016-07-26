@@ -46,8 +46,16 @@
   :group 'free-keys)
 
 (defcustom free-keys-keys "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^&*()-=[]{};'\\:\"|,./<>?`~"
-  "String of keys that can be used as bindings."
-  :type 'string
+  "String or list of keys that can be used as bindings.
+
+In case of string, each letter is interpreted as a character to
+test.
+
+In case of list, each item is considered as key code.  This
+allows you to add keys such as TAB or RET."
+  :type '(choice
+          (string :tag "String of characters")
+          (repeat :tag "List of characters" string))
   :group 'free-keys)
 
 (defcustom free-keys-ignored-bindings nil
@@ -137,10 +145,14 @@ This simply calls `free-keys'."
   "Process free bindings for MODIFIER."
   (let (empty-keys)
     (mapc (lambda (key)
-            (let* ((key-name
+            (let* ((key-as-string (cond
+                                   ((characterp key) (char-to-string key))
+                                   ((stringp key) key)
+                                   (t (error "Key is not a character nor a string"))))
+                   (key-name
                     (if (not (equal modifier ""))
-                        (concat modifier "-" (char-to-string key))
-                      (char-to-string key)))
+                        (concat modifier "-" key-as-string)
+                      key-as-string))
                    (full-name
                     (if (and prefix (not (equal prefix ""))) (concat prefix " " key-name) key-name))
                    (binding
