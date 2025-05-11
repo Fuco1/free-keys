@@ -1,4 +1,4 @@
-;;; free-keys.el --- Show free keybindings for modkeys or prefixes
+;;; free-keys.el --- Show free keybindings for modkeys or prefixes. -*-lexical-binding: t-*-
 
 ;; Copyright (C) 2013 Matus Goljer
 
