@@ -27,7 +27,7 @@
 
 ;;; Commentary:
 
-;; Show free keybindings for modkeys or prefixes. Based on code
+;; Show free keybindings for modkeys or prefixes.  Based on code
 ;; located here: https://gist.github.com/bjorne/3796607
 ;;
 ;; For complete description see https://github.com/Fuco1/free-keys
@@ -112,7 +112,7 @@ advancing down-right.  The margin between each column is 5 characters."
          (rem (mod num-of-keys cols))
          (cur-col 0)
          (cur-row 0))
-    (dotimes (i num-of-keys)
+    (dotimes (_ num-of-keys)
       (insert (nth
                (+ (* cur-col rows) cur-row (if (> cur-col rem) (- rem cur-col) 0))
                key-list)
@@ -124,14 +124,16 @@ advancing down-right.  The margin between each column is 5 characters."
         (cl-incf cur-row)))))
 
 (defun free-keys-set-prefix (prefix)
-  "Change the prefix in current *Free keys* buffer to PREFIX and
-update the display."
+  "Change key prefix context to PREFIX.
+
+Update *Free keys* display: show free keys available under this PREFIX."
   (interactive "sPrefix: ")
   (free-keys prefix free-keys-original-buffer))
 
 (defun free-keys-change-buffer (buffer)
-  "Change the buffer for which the bindings are displayed to
-BUFFER and update the display."
+  "Change buffer of key bindings in effect to BUFFER.
+
+Update *Free keys* display: show free keys available in this BUFFER."
   (interactive "bShow free bindings for buffer: ")
   (free-keys nil (get-buffer-create buffer)))
 
@@ -142,7 +144,7 @@ This simply calls `free-keys'."
   (free-keys nil free-keys-original-buffer))
 
 (defun free-keys--process-modifier (prefix modifier)
-  "Process free bindings for MODIFIER."
+  "Process free bindings for MODIFIER under PREFIX."
   (let (empty-keys)
     (mapc (lambda (key)
             (let* ((key-as-string (cond
@@ -174,14 +176,17 @@ This simply calls `free-keys'."
 (defun free-keys (&optional prefix buffer)
   "Display free keys in current buffer.
 
-A free key is a key that has no associated key-binding as
-determined by function `key-binding'.
+A free key is a key that has no associated key binding as
+determined by function `key-binding' .
 
 By default, keys on `free-keys-keys' list with no prefix sequence
 are considered, possibly together with modifier keys from
 `free-keys-modifiers'.  You can change the prefix sequence by
-hitting 'p' in the *Free keys* buffer.  Prefix is supplied in
-format recognized by `kbd', for example \"C-x\"."
+hitting p in the *Free keys* buffer.  PREFIX is supplied in
+format recognized by `kbd', for example \`C-x'.
+
+By default, the list is shown for the current buffer,
+unless BUFFER specifies another one."
   (interactive (list (when current-prefix-arg
                        (read-from-minibuffer "Prefix: "))))
   (setq prefix (or prefix ""))
